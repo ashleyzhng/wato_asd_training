@@ -21,9 +21,13 @@ class MapMemoryNode : public rclcpp::Node {
     rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr costmap_sub_;
     // Subscribes to robot odometry for tracking movement
     rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
+    // Timer that periodically checks whether the map should be updated
+    rclcpp::TimerBase::SharedPtr timer_;
 
     // Stores the most recently received costmap
     nav_msgs::msg::OccupancyGrid latest_costmap_;
+    // Stores the most recently received odometry data
+    nav_msgs::msg::Odometry latest_odom_;
 
     // Stores the robot's current position from odometry
     double current_x_;
@@ -42,6 +46,8 @@ class MapMemoryNode : public rclcpp::Node {
     void costmapCallback(const nav_msgs::msg::OccupancyGrid::SharedPtr msg);
     // Handles new odometry data and updates the robot's current position
     void odomCallback(const nav_msgs::msg::Odometry::SharedPtr msg);
+    // Checks whether the latest costmap should be added to the global map
+    void updateMap();
 
 };
 
