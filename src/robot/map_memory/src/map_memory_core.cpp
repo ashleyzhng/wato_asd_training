@@ -12,10 +12,31 @@ namespace robot
     const nav_msgs::msg::OccupancyGrid& costmap,
     const nav_msgs::msg::Odometry& odom)
   {
-    // Initialize the global map using the first received costmap
+    // Initialize the global map to cover the entire simulation environment
     if (global_map_.data.empty()) {
-        global_map_ = costmap;
-        return;
+
+        // Use the same resolution as the local costmap
+        global_map_.info.resolution = costmap.info.resolution;
+
+        // Create a 30 meter by 30 meter global map
+        global_map_.info.width = 300;
+        global_map_.info.height = 300;
+
+        // Set the bottom-left corner of the global map
+        global_map_.info.origin.position.x = -15.0;
+        global_map_.info.origin.position.y = -15.0;
+
+        // Set a valid orientation for the global map
+        global_map_.info.origin.orientation.w = 1.0;
+
+        // Set the global map coordinate frame
+        global_map_.header.frame_id = "sim_world";
+
+        // Start every cell as unknown
+        global_map_.data.assign(
+            global_map_.info.width * global_map_.info.height,
+            -1
+        );
     }
     // Get the robot's position in the global frame
     double robot_x = odom.pose.pose.position.x;
