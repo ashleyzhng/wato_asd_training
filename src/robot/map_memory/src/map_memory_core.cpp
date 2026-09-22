@@ -33,6 +33,9 @@ namespace robot
         1.0 - 2.0 * (qy * qy + qz * qz)
     );
 
+    // Get the size of each costmap cell in meters
+    double resolution = costmap.info.resolution;
+
     // Go through every cell in the local costmap
     for (int row = 0; row < costmap.info.height; row++) {
       for (int col = 0; col < costmap.info.width; col++) {
@@ -92,4 +95,11 @@ namespace robot
     
   }
 
+  
+  // Returns the current global map
+  const nav_msgs::msg::OccupancyGrid& MapMemoryCore::getGlobalMap() const
+  {
+      return global_map_;
+  }
+  
 } 

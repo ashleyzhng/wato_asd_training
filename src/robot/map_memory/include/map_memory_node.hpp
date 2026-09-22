@@ -23,7 +23,15 @@ class MapMemoryNode : public rclcpp::Node {
     rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
     // Timer that periodically checks whether the map should be updated
     rclcpp::TimerBase::SharedPtr timer_;
+    // Publishes the accumulated global map
+    rclcpp::Publisher<nav_msgs::msg::OccupancyGrid>::SharedPtr map_pub_;
 
+    // Publish the accumulated global map on the /map topic
+    map_pub_ = this->create_publisher<nav_msgs::msg::OccupancyGrid>(
+        "/map",
+        10
+    );
+    
     // Stores the most recently received costmap
     nav_msgs::msg::OccupancyGrid latest_costmap_;
     // Stores the most recently received odometry data
